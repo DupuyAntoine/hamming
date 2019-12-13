@@ -7,6 +7,8 @@
 # Une fonction Hachage qui découpe un bloc quelconque en sous blocs de taille 2^l-l-1
 # Bonus : Pour n, k implémenter la fonction qui calcule le nombre max d'erreurs corrigibles qui provient de l'empilement des sphères
 
+from random import randint
+
 def dec_to_binary(nb, nbBits):
     """ Converti un nombre décimal en binaire """
     binary = []
@@ -32,7 +34,7 @@ def is_power_two(nb):
     """ Vérifie si un nombre est une puissance de 2 """
     return (nb & (nb-1) == 0) and (nb != 0)
 
-def matmul(mot, mat):
+def matmul1D(mot, mat):
     """ Multiplie un mot par une matrice """
     tmp = [0] * (len(mat[0]))
     for i in range(len(mot)):
@@ -40,6 +42,15 @@ def matmul(mot, mat):
             tmp[j] = (tmp[j] + (mot[i] * mat[i][j])) % 2
     return tmp
 
+def matmul2D(mot, mat):
+    """ Multiplie un mot par une matrice """
+    col = []
+    for i in range(len(mat)):
+        tmp = 0
+        for j in range(len(mot)):
+            tmp = (tmp + mot[j] * mat[i][j]) % 2
+        col.append(tmp)
+    return col
 
 
 class Hamming:
@@ -76,8 +87,31 @@ class Hamming:
 
     def encodage(self, mot, matGen):
         """ Encode un mot de taille 2^l - l - 1 """
-        return matmul(mot, matGen)
+        return matmul1D(mot, matGen)
 
+    def bruitage(self, mot):
+        """ Altère un bit au hasard dans un mot """
+        index = randint(0, len(mot) - 1)
+        bruit = mot[:]
+        bruit[index] = (bruit[index] + 1) % 2
+        return bruit
+
+    def correction(self, mot, matPar):
+        """ Corrige un mot possiblement erroné """
+        col = []
+        index = 0
+        # H * le mot en colonne
+        col = matmul2D(mot, matPar)
+        matParTrans = transpose(matPar)
+        # trouver la position de la colonne de H correspondante à la colonne trouvée
+        for i in range(len(matParTrans)):
+            if(col == matParTrans[i]):
+                index = i
+        # changer le bit se trouvant à cet index
+        decode = mot[:]
+        decode[index] = (decode[index] + 1) % 2
+        return decode
+        
 
 
 if __name__ == '__main__':
@@ -90,3 +124,7 @@ if __name__ == '__main__':
     m = [1, 1, 0, 0]
     md = hamming.encodage(m, g)
     print(md)
+    mb = hamming.bruitage(md)
+    print(mb)
+    mdd = hamming.correction(mb, h)
+    print(mdd)
