@@ -111,20 +111,77 @@ class Hamming:
         decode = mot[:]
         decode[index] = (decode[index] + 1) % 2
         return decode
-        
+
+    def hachage(self, mot, longueur):
+        """ Hache une longue donnée et la transforme en tableau de données décodables """
+        hashed = []
+        tmp = []
+        for i in range(len(mot)):
+            if(i % longueur != 0 or i == 0):
+                tmp.append(mot[i])
+            else:
+                hashed.append(tmp)
+                tmp = []
+                tmp.append(mot[i])
+        return hashed        
 
 
 if __name__ == '__main__':
-    hamming = Hamming(3)
+    #Variables
+    l = 3
+    m = [1, 1, 0, 0]
+    hash = [1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1]
+
+
+    # Création d'un code de Hamming de taille l = 3
+    print("Création d'un code de Hamming de taille l = 3..." + '\n')
+    hamming = Hamming(l)
+
+    # Génération de la matrice H
+    print("Génération de la matrice H : " + '\n')
     h = hamming.matriceH()
     print(h)
+
     print('\n')
+
+    # Génération de la matrice G
+    print("Génération de la matrice G :" + '\n')
     g = hamming.matriceG(h)
     print(g)
-    m = [1, 1, 0, 0]
+
+    print('\n')    
+
+    # Encodage d'un mot m = (1100)
+    print("Encodage d'un mot m = (1100) :" + '\n')
     md = hamming.encodage(m, g)
     print(md)
+
+    print('\n')
+
+    # Bruitage du mot encodé précédent
+    print("Bruitage du mot encodé précédent :" + '\n')
     mb = hamming.bruitage(md)
     print(mb)
+
+    print('\n')
+
+    # Correction du mot bruité précédent
+    print("Correction du mot bruité précédent :" + '\n')
     mdd = hamming.correction(mb, h)
     print(mdd)
+
+    print('\n')
+
+    # Hachage de la donnée suivante
+    print("Hachage de la donnée suivante :" + '\n')
+    print(hash)
+    print('\n' + "Résultat : " + '\n')
+    hashed = hamming.hachage(hash, hamming.n)
+    print(hashed)
+
+    print('\n')
+
+    # Correction de la donnée hachée
+    print("Correction de la donnée hachée :" + '\n')
+    for i in range(len(hashed)):
+        print(hamming.correction(hashed[i], h))
