@@ -1,13 +1,20 @@
 # coding: utf-8
 
-# Deux fonctions MatriceH et MatriceG qui étant donné l calculant une matrice de parité et génératrice du code de Hamming pour l
-# Une fonction Encodage d'une bloc de taille 2^l-l-1
-# Une fonction Bruitage qui altère un bit parmi 2^l-1
-# Une fonction Décodage qui décode un mot de taille 2^l-1
-# Une fonction Hachage qui découpe un bloc quelconque en sous blocs de taille 2^l-l-1
+# TP Maths Hamming
+# Réalisé par Thomas COLETTE et Antoine DUPUY
+# Master 1 ICE (2019-2020)
+
+# Consignes :
+# [Réalisé] Deux fonctions MatriceH et MatriceG qui étant donné l calculant une matrice de parité et génératrice du code de Hamming pour l
+# [Réalisé] Une fonction Encodage d'une bloc de taille 2^l-l-1
+# [Réalisé] Une fonction Bruitage qui altère un bit parmi 2^l-1
+# [Réalisé] Une fonction Coorection qui corrige un mot de taille 2^l-1
+# [Réalisé] Une fonction Hachage qui découpe un bloc quelconque en sous blocs de taille 2^l-l-1
 # Bonus : Pour n, k implémenter la fonction qui calcule le nombre max d'erreurs corrigibles qui provient de l'empilement des sphères
 
 from random import randint
+
+# Fonctions générales
 
 def dec_to_binary(nb, nbBits):
     """ Converti un nombre décimal en binaire """
@@ -32,15 +39,7 @@ def transpose(mat):
 
 def is_power_two(nb):
     """ Vérifie si un nombre est une puissance de 2 """
-    return (nb & (nb-1) == 0) and (nb != 0)
-
-def matmul1D(mot, mat):
-    """ Multiplie un mot par une matrice """
-    tmp = [0] * (len(mat[0]))
-    for i in range(len(mot)):
-        for j in range(len(mat[0])):
-            tmp[j] = (tmp[j] + (mot[i] * mat[i][j])) % 2
-    return tmp
+    return (nb & (nb-1) == 0) and (nb != 0)  
 
 def matmul2D(mot, mat):
     """ Multiplie un mot par une matrice """
@@ -87,7 +86,11 @@ class Hamming:
 
     def encodage(self, mot, matGen):
         """ Encode un mot de taille 2^l - l - 1 """
-        return matmul1D(mot, matGen)
+        tmp = [0] * (len(matGen[0]))
+        for i in range(len(mot)):
+            for j in range(len(matGen[0])):
+                tmp[j] = (tmp[j] + (mot[i] * matGen[i][j])) % 2
+        return tmp
 
     def bruitage(self, mot):
         """ Altère un bit au hasard dans un mot """
