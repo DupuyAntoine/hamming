@@ -1,4 +1,7 @@
-# coding: utf-8
+# !/usr/bin/env python
+# -*- coding: latin-1 -*-
+
+# coding utf-8
 
 # TP Maths Hamming
 # Réalisé par Thomas COLETTE et Antoine DUPUY
