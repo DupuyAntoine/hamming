@@ -121,15 +121,9 @@ class Hamming:
     def hachage(self, mot, longueur):
         """ Hache une longue donnée et la transforme en tableau de données décodables """
         hashed = []
-        tmp = []
-        for i in range(len(mot)):
-            if(i % longueur != 0 or i == 0):
-                tmp.append(mot[i])
-            else:
-                hashed.append(tmp)
-                tmp = []
-                tmp.append(mot[i])
-        return hashed        
+        for i in range(0, len(mot), longueur):
+            hashed.append(mot[i:i + longueur])
+        return hashed
 
 
 if __name__ == '__main__':
